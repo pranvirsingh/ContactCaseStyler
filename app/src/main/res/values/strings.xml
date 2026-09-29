@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Contact Case Styler</string>
+    <string name="tile_label">Case Styler</string>
+    <string name="headline">Contact Case Styler</string>
+    <string name="subtitle">One style for every saved name. Backup first.</string>
+    <string name="count_unknown">Contacts: unknown yet</string>
+    <string name="count">Contacts: %1$d</string>
+    <string name="grant">Grant contacts permission</string>
+    <string name="pick_style">Style</string>
+    <string name="preview_empty">Names will preview here.</string>
+    <string name="apply">Backup + Apply to all</string>
+    <string name="backup">Backup only</string>
+    <string name="restore">Restore backup</string>
+    <string name="hide_icon">Hide icon from launcher (tile keeps working)</string>
+    <string name="safety_note">Apply rewrites real names, so dialer and WhatsApp show the new style too. Restore brings originals back.</string>
+    <string name="permission_needed">Contacts permission is needed to style names.</string>
+    <string name="load_first">Grant permission first so names can load.</string>
+    <string name="applied">Updated %1$d, skipped/failed %2$d</string>
+    <string name="backed_up">Backed up %1$d contacts</string>
+    <string name="restored">Restored %1$d, failed %2$d</string>
+    <string name="icon_hidden">Icon hidden. Open from Quick Settings tile or Settings → Apps.</string>
+    <string name="icon_shown">Icon back in the launcher.</string>
+</resources>
