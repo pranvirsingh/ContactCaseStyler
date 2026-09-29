@@ -74,10 +74,10 @@ class ContactsHelper(private val context: Context) {
                         ),
                     )
                     .withValue(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, styled)
-                    .withValueNull(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME)
-                    .withValueNull(ContactsContract.CommonDataKinds.StructuredName.MIDDLE_NAME)
-                    .withValueNull(ContactsContract.CommonDataKinds.StructuredName.PREFIX)
-                    .withValueNull(ContactsContract.CommonDataKinds.StructuredName.SUFFIX)
+                    .withValue(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, null)
+                    .withValue(ContactsContract.CommonDataKinds.StructuredName.MIDDLE_NAME, null)
+                    .withValue(ContactsContract.CommonDataKinds.StructuredName.PREFIX, null)
+                    .withValue(ContactsContract.CommonDataKinds.StructuredName.SUFFIX, null)
                     .build()
             }
             if (ops.isEmpty()) return@forEach
