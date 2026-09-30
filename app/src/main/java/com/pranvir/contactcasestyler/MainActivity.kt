@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         binding.hideIconSwitch.setOnCheckedChangeListener { _, hide -> setIconHidden(hide) }
 
         askPermissions()
+        checkForUpdate()
     }
 
     private fun askPermissions() {
@@ -138,4 +139,37 @@ class MainActivity : AppCompatActivity() {
 
     private fun toast(text: String) =
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+
+    private fun prefs() = getSharedPreferences("ccs", MODE_PRIVATE)
+
+    /** One GitHub call per launch. Shows the update box once per version. */
+    private fun checkForUpdate() {
+        lifecycleScope.launch {
+            val latest = UpdateCheck.fetchLatestTag() ?: return@launch
+            if (!UpdateCheck.isNewer(latest, BuildConfig.VERSION_NAME)) return@launch
+            if (prefs().getString("skipped_version", null) == latest) return@launch
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(this@MainActivity)
+                .setTitle(getString(R.string.update_title, latest))
+                .setMessage(getString(R.string.update_message))
+                .setPositiveButton(R.string.update_now) { _, _ -> openReleases() }
+                .setNeutralButton(R.string.update_skip) { _, _ ->
+                    prefs().edit().putString("skipped_version", latest).apply()
+                }
+                .setNegativeButton(R.string.update_later, null)
+                .show()
+        }
+    }
+
+    private fun openReleases() {
+        try {
+            startActivity(
+                android.content.Intent(
+                    android.content.Intent.ACTION_VIEW,
+                    android.net.Uri.parse(UpdateCheck.RELEASES_PAGE),
+                ),
+            )
+        } catch (_: Exception) {
+            toast(getString(R.string.update_open_failed))
+        }
+    }
 }

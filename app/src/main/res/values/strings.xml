@@ -21,4 +21,10 @@
     <string name="restored">Restored %1$d, failed %2$d</string>
     <string name="icon_hidden">Icon hidden. Open from Quick Settings tile or Settings → Apps.</string>
     <string name="icon_shown">Icon back in the launcher.</string>
+    <string name="update_title">New version %1$s is out</string>
+    <string name="update_message">Update for the latest styles and fixes. Takes less than a minute.</string>
+    <string name="update_now">Update</string>
+    <string name="update_skip">Skip this version</string>
+    <string name="update_later">Later</string>
+    <string name="update_open_failed">Could not open the download page.</string>
 </resources>
