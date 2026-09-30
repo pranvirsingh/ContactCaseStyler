@@ -45,7 +45,9 @@ APK lands in `app/build/outputs/apk/debug/`.
 
 ## Privacy
 
-100% on-device. No account, no network, no analytics. Contacts never leave your phone.
+100% on-device. No account, no analytics. Contacts never leave your
+phone. The only network call is one check for a newer release on
+GitHub each time the app opens.
 
 ## Docs
 

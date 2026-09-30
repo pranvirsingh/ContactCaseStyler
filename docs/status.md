@@ -1,6 +1,13 @@
 # Status
 
-## v0.2.0 — more styles + search safeguard (this version)
+## v0.3.0 — in-app update notice (this version)
+
+- On launch the app asks GitHub for the latest release and shows an
+  update box when a newer one exists (Update / Skip version / Later).
+- One plain HTTPS call, no login, no tracking. Skipped versions are
+  remembered on-device.
+
+## v0.2.0 — more styles + search safeguard
 
 - 14 new styles: Swap, Last, First, Initials, Spaced, Dotted, Leet,
   Alternating, Fullwidth, Circled, Fraktur, Script, Strike, Brackets, Stars.
