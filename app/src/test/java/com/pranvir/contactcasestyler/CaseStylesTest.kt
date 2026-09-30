@@ -7,6 +7,8 @@ import org.junit.Test
 
 class CaseStylesTest {
 
+    private fun cp(code: Int): String = String(Character.toChars(code))
+
     @Test fun camel_basic() {
         assertEquals("alexMorgan", CaseStyles.apply("Alex Morgan", CaseStyles.Style.CAMEL))
     }
@@ -50,8 +52,8 @@ class CaseStylesTest {
     @Test fun bold_mapsAlphabet() {
         val out = CaseStyles.apply("Alex", CaseStyles.Style.BOLD)
         assertEquals(
-            Character.toString(0x1D400) + Character.toString(0x1D425) +
-                Character.toString(0x1D41E) + Character.toString(0x1D431),
+            cp(0x1D400) + cp(0x1D425) +
+                cp(0x1D41E) + cp(0x1D431),
             out,
         )
     }
@@ -95,8 +97,8 @@ class CaseStylesTest {
     @Test fun fullwidth_mapsAscii() {
         val out = CaseStyles.apply("Alex", CaseStyles.Style.FULLWIDTH)
         assertEquals(
-            Character.toString(0xFF21) + Character.toString(0xFF4C) +
-                Character.toString(0xFF45) + Character.toString(0xFF58),
+            cp(0xFF21) + cp(0xFF4C) +
+                cp(0xFF45) + cp(0xFF58),
             out,
         )
     }
@@ -104,8 +106,8 @@ class CaseStylesTest {
     @Test fun circled_lowercase() {
         val out = CaseStyles.apply("alex", CaseStyles.Style.CIRCLED)
         assertEquals(
-            Character.toString(0x24D0) + Character.toString(0x24DB) +
-                Character.toString(0x24D4) + Character.toString(0x24E7),
+            cp(0x24D0) + cp(0x24DB) +
+                cp(0x24D4) + cp(0x24E7),
             out,
         )
     }
@@ -113,7 +115,7 @@ class CaseStylesTest {
     @Test fun fraktur_usesBoldBlock() {
         val out = CaseStyles.apply("Al", CaseStyles.Style.FRAKTUR)
         assertEquals(
-            "${Character.toString(0x1D504)}${Character.toString(0x1D529)}",
+            "${cp(0x1D504)}${cp(0x1D529)}",
             out,
         )
     }
@@ -121,7 +123,7 @@ class CaseStylesTest {
     @Test fun script_usesBoldBlock() {
         val out = CaseStyles.apply("Al", CaseStyles.Style.SCRIPT)
         assertEquals(
-            "${Character.toString(0x1D4D0)}${Character.toString(0x1D4F5)}",
+            "${cp(0x1D4D0)}${cp(0x1D4F5)}",
             out,
         )
     }
@@ -135,15 +137,15 @@ class CaseStylesTest {
 
     @Test fun brackets_wrapsTitle() {
         val out = CaseStyles.apply("Alex Morgan", CaseStyles.Style.BRACKETS)
-        assertTrue(out.startsWith(Character.toString(0x3010)))
-        assertTrue(out.endsWith(Character.toString(0x3011)))
+        assertTrue(out.startsWith(cp(0x3010)))
+        assertTrue(out.endsWith(cp(0x3011)))
         assertTrue(out.contains("Alex Morgan"))
     }
 
     @Test fun stars_wrapsTitle() {
         val out = CaseStyles.apply("Alex Morgan", CaseStyles.Style.STARS)
-        assertTrue(out.startsWith(Character.toString(0x2605)))
-        assertTrue(out.endsWith(Character.toString(0x2605)))
+        assertTrue(out.startsWith(cp(0x2605)))
+        assertTrue(out.endsWith(cp(0x2605)))
         assertTrue(out.contains("Alex Morgan"))
     }
 
