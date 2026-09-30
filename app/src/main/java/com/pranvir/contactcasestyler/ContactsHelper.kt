@@ -129,7 +129,7 @@ class ContactsHelper(private val context: Context) {
                 ContactsContract.Data.CONTENT_URI,
                 arrayOf(ContactsContract.Data.CONTACT_ID),
                 where,
-                chunk.map { it.toString() } + ContactsContract.CommonDataKinds.Nickname.CONTENT_ITEM_TYPE,
+                (chunk.map { it.toString() } + ContactsContract.CommonDataKinds.Nickname.CONTENT_ITEM_TYPE).toTypedArray(),
                 null,
             )?.use { cursor ->
                 while (cursor.moveToNext()) nicknamed += cursor.getLong(0)
