@@ -1,19 +1,24 @@
 # Contact Case Styler
 
-One-tap styles for all your contact names. `Pranvir Singh` → `pranvirSingh`.
+One-tap styles for all your contact names. `Alex Morgan` → `alexMorgan`.
 
 ![CI](https://github.com/pranvirsingh/ContactCaseStyler/actions/workflows/ci.yml/badge.svg)
 ![Release](https://img.shields.io/github/v/release/pranvirsingh/ContactCaseStyler)
 ![License](https://img.shields.io/github/license/pranvirsingh/ContactCaseStyler)
 
-| Before | camelCase | snake_case | Bold |
+| Before | camelCase | snake_case | Leet (fun) |
 |---|---|---|---|
-| Pranvir Singh | pranvirSingh | pranvir_singh | 𝐏𝐫𝐚𝐧𝐯𝐢𝐫 𝐒𝐢𝐧𝐠𝐡 |
-| Anaya Sharma | anayaSharma | anaya_sharma | 𝐀𝐧𝐚𝐲𝐚 𝐒𝐡𝐚𝐫𝐦𝐚 |
+| Alex Morgan | alexMorgan | alex_morgan | 4l3x M0rg4n |
+| Jordan Lee | jordanLee | jordan_lee | J0rd4n L33 |
 
 ## Styles
 
-camelCase · PascalCase · snake_case · kebab-case · UPPER_SNAKE · Title Case · lowercase · UPPERCASE · Bold
+**Safe** (search keeps working): camelCase · PascalCase · snake_case · kebab-case · UPPER_SNAKE · Title Case · lowercase · UPPERCASE · Swap · Last, First · Initials · Spaced · Dotted · Alternating · Brackets · Stars
+
+**Fun** (fancy Unicode textures — search may not match): Bold · Leet · Fullwidth · Circled · Fraktur · Script · Strike
+
+Fun styles auto-save each original name as the contact's nickname, so
+most dialers still find them. Backup + restore included regardless.
 
 ## Install
 
