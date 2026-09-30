@@ -37,7 +37,9 @@ class MainActivity : AppCompatActivity() {
         binding.styleSpinner.adapter = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_dropdown_item,
-            CaseStyles.Style.entries.map { "${it.label}  ·  ${it.example}" },
+            CaseStyles.Style.entries.map {
+                it.label + "  ·  " + it.example + if (it.safe) "" else "  ·  fun"
+            },
         )
         binding.styleSpinner.setSelection(0)
         binding.styleSpinner.onItemSelectedListener = SimpleSelectedListener {
@@ -86,6 +88,9 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val result = withContext(Dispatchers.IO) {
                 helper.backup(contacts)
+                if (!style.safe) {
+                    helper.ensureNicknames(contacts.associate { it.id to it.displayName })
+                }
                 helper.applyStyles(contacts, style)
             }
             toast(getString(R.string.applied, result.updated, result.failed))

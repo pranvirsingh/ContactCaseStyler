@@ -6,7 +6,7 @@ with AI help and is still getting hands-on with professional practices.
 ## What this is
 
 A tiny, no-root Android tweak: restyle every saved contact name in one
-tap (`Pranvir Singh` → `pranvirSingh`, plus 8 more styles). Backup and
+tap (`Alex Morgan` → `alexMorgan`, plus many more styles). Backup and
 restore included. See [docs/why.md](docs/why.md) first.
 
 ## Rules

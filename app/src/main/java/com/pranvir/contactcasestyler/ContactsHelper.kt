@@ -91,8 +91,87 @@ class ContactsHelper(private val context: Context) {
         return ApplyResult(updated, failed)
     }
 
-    fun backup(contacts: List<DeviceContact>): File {
-        val json = JSONArray()
+    /**
+     * Saves each original name as the contact's nickname. Most dialers also
+     * search nicknames, so styled contacts stay findable. Best-effort:
+     * read-only accounts may reject it — those are silently skipped.
+     * Nicknames are intentionally left in place by restore(), they only help.
+     */
+    fun ensureNicknames(originals: Map<Long, String>) {
+        if (originals.isEmpty()) return
+        val ids = originals.keys.toList()
+
+        // contactId -> one rawContactId (first wins).
+        val rawByContact = mutableMapOf<Long, Long>()
+        ids.chunked(400).forEach { chunk ->
+            val where = "${ContactsContract.RawContacts.CONTACT_ID} IN (${chunk.joinToString(",") { "?" }})"
+            resolver.query(
+                ContactsContract.RawContacts.CONTENT_URI,
+                arrayOf(ContactsContract.RawContacts._ID, ContactsContract.RawContacts.CONTACT_ID),
+                where,
+                chunk.map { it.toString() }.toTypedArray(),
+                null,
+            )?.use { cursor ->
+                val rawCol = cursor.getColumnIndexOrThrow(ContactsContract.RawContacts._ID)
+                val contactCol = cursor.getColumnIndexOrThrow(ContactsContract.RawContacts.CONTACT_ID)
+                while (cursor.moveToNext()) {
+                    rawByContact.putIfAbsent(cursor.getLong(contactCol), cursor.getLong(rawCol))
+                }
+            }
+        }
+
+        // Contacts that already have a nickname row.
+        val nicknamed = mutableSetOf<Long>()
+        ids.chunked(400).forEach { chunk ->
+            val where = "${ContactsContract.Data.CONTACT_ID} IN (${chunk.joinToString(",") { "?" }})" +
+                " AND ${ContactsContract.Data.MIMETYPE}=?"
+            resolver.query(
+                ContactsContract.Data.CONTENT_URI,
+                arrayOf(ContactsContract.Data.CONTACT_ID),
+                where,
+                (chunk.map { it.toString() } + ContactsContract.CommonDataKinds.Nickname.CONTENT_ITEM_TYPE).toTypedArray(),
+                null,
+            )?.use { cursor ->
+                while (cursor.moveToNext()) nicknamed += cursor.getLong(0)
+            }
+        }
+
+        val nicknameType = ContactsContract.CommonDataKinds.Nickname.CONTENT_ITEM_TYPE
+        val ops = ArrayList<ContentProviderOperation>()
+        fun flush() {
+            if (ops.isEmpty()) return
+            try {
+                resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
+            } catch (_: Exception) {
+                // Best-effort by design.
+            }
+            ops.clear()
+        }
+        for ((contactId, original) in originals) {
+            if (contactId in nicknamed) {
+                ops += ContentProviderOperation
+                    .newUpdate(ContactsContract.Data.CONTENT_URI)
+                    .withSelection(
+                        "${ContactsContract.Data.CONTACT_ID}=? AND ${ContactsContract.Data.MIMETYPE}=?",
+                        arrayOf(contactId.toString(), nicknameType),
+                    )
+                    .withValue(ContactsContract.CommonDataKinds.Nickname.NAME, original)
+                    .build()
+            } else {
+                val rawId = rawByContact[contactId] ?: continue
+                ops += ContentProviderOperation
+                    .newInsert(ContactsContract.Data.CONTENT_URI)
+                    .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawId)
+                    .withValue(ContactsContract.Data.MIMETYPE, nicknameType)
+                    .withValue(ContactsContract.CommonDataKinds.Nickname.NAME, original)
+                    .build()
+            }
+            if (ops.size >= 300) flush()
+        }
+        flush()
+    }
+
+    fun backup(contacts: List<DeviceContact>): File {        val json = JSONArray()
         for (c in contacts) {
             json.put(
                 JSONObject()

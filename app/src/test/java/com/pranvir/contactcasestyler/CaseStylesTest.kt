@@ -1,52 +1,173 @@
 package com.pranvir.contactcasestyler
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class CaseStylesTest {
 
+    private fun cp(code: Int): String = String(Character.toChars(code))
+
     @Test fun camel_basic() {
-        assertEquals("pranvirSingh", CaseStyles.apply("Pranvir Singh", CaseStyles.Style.CAMEL))
+        assertEquals("alexMorgan", CaseStyles.apply("Alex Morgan", CaseStyles.Style.CAMEL))
     }
 
     @Test fun camel_singleWord() {
-        assertEquals("pranvir", CaseStyles.apply("Pranvir", CaseStyles.Style.CAMEL))
+        assertEquals("alex", CaseStyles.apply("Alex", CaseStyles.Style.CAMEL))
     }
 
     @Test fun camel_messySpacingAndCase() {
-        assertEquals("pranvirSingh", CaseStyles.apply("  PRANVIR   singh ", CaseStyles.Style.CAMEL))
+        assertEquals("alexMorgan", CaseStyles.apply("  ALEX   morgan ", CaseStyles.Style.CAMEL))
     }
 
     @Test fun pascal_threeWords() {
-        assertEquals("PranvirKumarSingh", CaseStyles.apply("pranvir kumar singh", CaseStyles.Style.PASCAL))
+        assertEquals("AlexKumarMorgan", CaseStyles.apply("alex kumar morgan", CaseStyles.Style.PASCAL))
     }
 
     @Test fun snake_stripsPunctuation() {
-        assertEquals("dr_pranvir_singh", CaseStyles.apply("Dr. Pranvir Singh!!", CaseStyles.Style.SNAKE))
+        assertEquals("dr_alex_morgan", CaseStyles.apply("Dr. Alex Morgan!!", CaseStyles.Style.SNAKE))
     }
 
     @Test fun kebab_basic() {
-        assertEquals("pranvir-singh", CaseStyles.apply("Pranvir Singh", CaseStyles.Style.KEBAB))
+        assertEquals("alex-morgan", CaseStyles.apply("Alex Morgan", CaseStyles.Style.KEBAB))
     }
 
     @Test fun upperSnake_basic() {
-        assertEquals("PRANVIR_SINGH", CaseStyles.apply("Pranvir Singh", CaseStyles.Style.UPPER_SNAKE))
+        assertEquals("ALEX_MORGAN", CaseStyles.apply("Alex Morgan", CaseStyles.Style.UPPER_SNAKE))
     }
 
     @Test fun title_lowercasesRest() {
-        assertEquals("Pranvir Singh", CaseStyles.apply("PRANVIR SINGH", CaseStyles.Style.TITLE))
+        assertEquals("Alex Morgan", CaseStyles.apply("ALEX MORGAN", CaseStyles.Style.TITLE))
     }
 
     @Test fun lower_basic() {
-        assertEquals("pranvir singh", CaseStyles.apply("Pranvir Singh", CaseStyles.Style.LOWER))
+        assertEquals("alex morgan", CaseStyles.apply("Alex Morgan", CaseStyles.Style.LOWER))
     }
 
     @Test fun upper_basic() {
-        assertEquals("PRANVIR SINGH", CaseStyles.apply("Pranvir Singh", CaseStyles.Style.UPPER))
+        assertEquals("ALEX MORGAN", CaseStyles.apply("Alex Morgan", CaseStyles.Style.UPPER))
     }
 
     @Test fun bold_mapsAlphabet() {
-        assertEquals("𝐏𝐫𝐚𝐧𝐯𝐢𝐫", CaseStyles.apply("Pranvir", CaseStyles.Style.BOLD))
+        val out = CaseStyles.apply("Alex", CaseStyles.Style.BOLD)
+        assertEquals(
+            cp(0x1D400) + cp(0x1D425) +
+                cp(0x1D41E) + cp(0x1D431),
+            out,
+        )
+    }
+
+    @Test fun swap_twoWords() {
+        assertEquals("Morgan Alex", CaseStyles.apply("Alex Morgan", CaseStyles.Style.SWAP))
+    }
+
+    @Test fun swap_singleWordUnchanged() {
+        assertEquals("Alex", CaseStyles.apply("Alex", CaseStyles.Style.SWAP))
+    }
+
+    @Test fun lastFirst_basic() {
+        assertEquals("Morgan, Alex", CaseStyles.apply("Alex Morgan", CaseStyles.Style.LAST_FIRST))
+    }
+
+    @Test fun initials_twoWords() {
+        assertEquals("A. Morgan", CaseStyles.apply("Alex Morgan", CaseStyles.Style.INITIALS))
+    }
+
+    @Test fun initials_threeWords() {
+        assertEquals("A. K. Morgan", CaseStyles.apply("Alex Kumar Morgan", CaseStyles.Style.INITIALS))
+    }
+
+    @Test fun spaced_basic() {
+        assertEquals("A L E X   M O R G A N", CaseStyles.apply("Alex Morgan", CaseStyles.Style.SPACED))
+    }
+
+    @Test fun dotted_basic() {
+        assertEquals("A.l.e.x M.o.r.g.a.n", CaseStyles.apply("Alex Morgan", CaseStyles.Style.DOTTED))
+    }
+
+    @Test fun leet_basic() {
+        assertEquals("4l3x M0rg4n", CaseStyles.apply("Alex Morgan", CaseStyles.Style.LEET))
+    }
+
+    @Test fun alternating_basic() {
+        assertEquals("aLeX mOrGaN", CaseStyles.apply("Alex Morgan", CaseStyles.Style.ALTERNATING))
+    }
+
+    @Test fun fullwidth_mapsAscii() {
+        val out = CaseStyles.apply("Alex", CaseStyles.Style.FULLWIDTH)
+        assertEquals(
+            cp(0xFF21) + cp(0xFF4C) +
+                cp(0xFF45) + cp(0xFF58),
+            out,
+        )
+    }
+
+    @Test fun circled_lowercase() {
+        val out = CaseStyles.apply("alex", CaseStyles.Style.CIRCLED)
+        assertEquals(
+            cp(0x24D0) + cp(0x24DB) +
+                cp(0x24D4) + cp(0x24E7),
+            out,
+        )
+    }
+
+    @Test fun fraktur_usesBoldBlock() {
+        val out = CaseStyles.apply("Al", CaseStyles.Style.FRAKTUR)
+        assertEquals(
+            "${cp(0x1D504)}${cp(0x1D529)}",
+            out,
+        )
+    }
+
+    @Test fun script_usesBoldBlock() {
+        val out = CaseStyles.apply("Al", CaseStyles.Style.SCRIPT)
+        assertEquals(
+            "${cp(0x1D4D0)}${cp(0x1D4F5)}",
+            out,
+        )
+    }
+
+    @Test fun strike_addsCombiningMark() {
+        val out = CaseStyles.apply("Alex", CaseStyles.Style.STRIKE)
+        assertEquals(8, out.length)
+        assertTrue(out.startsWith("A"))
+        assertEquals(4, out.count { it.code == 0x0336 })
+    }
+
+    @Test fun brackets_wrapsTitle() {
+        val out = CaseStyles.apply("Alex Morgan", CaseStyles.Style.BRACKETS)
+        assertTrue(out.startsWith(cp(0x3010)))
+        assertTrue(out.endsWith(cp(0x3011)))
+        assertTrue(out.contains("Alex Morgan"))
+    }
+
+    @Test fun stars_wrapsTitle() {
+        val out = CaseStyles.apply("Alex Morgan", CaseStyles.Style.STARS)
+        assertTrue(out.startsWith(cp(0x2605)))
+        assertTrue(out.endsWith(cp(0x2605)))
+        assertTrue(out.contains("Alex Morgan"))
+    }
+
+    @Test fun safeFlags_plainStylesAreSafe() {
+        val safe = listOf(
+            CaseStyles.Style.CAMEL, CaseStyles.Style.PASCAL, CaseStyles.Style.SNAKE,
+            CaseStyles.Style.KEBAB, CaseStyles.Style.UPPER_SNAKE, CaseStyles.Style.TITLE,
+            CaseStyles.Style.LOWER, CaseStyles.Style.UPPER, CaseStyles.Style.SWAP,
+            CaseStyles.Style.LAST_FIRST, CaseStyles.Style.INITIALS, CaseStyles.Style.SPACED,
+            CaseStyles.Style.DOTTED, CaseStyles.Style.ALTERNATING, CaseStyles.Style.BRACKETS,
+            CaseStyles.Style.STARS,
+        )
+        assertTrue(safe.all { it.safe })
+    }
+
+    @Test fun safeFlags_texturesAreFun() {
+        val funStyles = listOf(
+            CaseStyles.Style.BOLD, CaseStyles.Style.LEET, CaseStyles.Style.FULLWIDTH,
+            CaseStyles.Style.CIRCLED, CaseStyles.Style.FRAKTUR, CaseStyles.Style.SCRIPT,
+            CaseStyles.Style.STRIKE,
+        )
+        assertFalse(funStyles.any { it.safe })
     }
 
     @Test fun empty_returnsInput() {

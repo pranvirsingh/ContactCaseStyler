@@ -13,7 +13,7 @@
     <string name="backup">Backup only</string>
     <string name="restore">Restore backup</string>
     <string name="hide_icon">Hide icon from launcher (tile keeps working)</string>
-    <string name="safety_note">Apply rewrites real names, so dialer and WhatsApp show the new style too. Restore brings originals back.</string>
+    <string name="safety_note">Apply rewrites real names, so dialer and WhatsApp show the new style too. Styles tagged fun also save each original as a nickname so search keeps working in most dialers. Restore brings originals back.</string>
     <string name="permission_needed">Contacts permission is needed to style names.</string>
     <string name="load_first">Grant permission first so names can load.</string>
     <string name="applied">Updated %1$d, skipped/failed %2$d</string>

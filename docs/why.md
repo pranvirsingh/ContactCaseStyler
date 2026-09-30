@@ -1,6 +1,6 @@
 # Why
 
-Phone contacts look messy: `PRANVIR singh`, `pranvir  Singh`, `Dr. Pranvir Singh!!`.
+Phone contacts look messy: `ALEX morgan`, `alex  Morgan`, `Dr. Alex Morgan!!`.
 Cleaning them one by one is boring, and no dialer restyles them for you.
 
 This tweak applies one consistent style to every saved name in a single
